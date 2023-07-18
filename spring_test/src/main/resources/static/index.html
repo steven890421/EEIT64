@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+
+ <!-- 社群媒體icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/index2.css" />
+  
+  <!-- 輪播圖 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <!-- icon -->
+  <script src="https://kit.fontawesome.com/49d9cf6d09.js" crossorigin="anonymous"></script>
+
+  <title>食材行情小幫手</title>
+  
+<header> <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="/images/logo.jpg" alt="Logo" width="60" height="60"/>
+      <span class=" navbar-text">食材行情小幫手</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item me-4">
+                    <a class="nav-link" href="select.html">農產行情</a>
+                </li>
+<!--                 <li class="nav-item me-4"> -->
+<!--                     <a class="nav-link" href="#">漁產行情</a> -->
+<!--                 </li> -->
+                <li class="nav-item me-4">
+                    <a class="nav-link" href="fourm">討論區</a>
+                </li>
+                <li class="nav-item me-4">
+                    <a class="nav-link" href="store">商城</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="ml-auto" id="user-nav">
+            <a class="nav-link" href="login"> 登入|註冊 </a>
+
+        </div>
+    </div>
+</nav>
+</header>
+ 
+
+
+</head>
+<script>
+	window.onload = function() {
+		
+		let token =  sessionStorage.getItem("token");
+        let googleToken = sessionStorage.getItem("googletoken");
+
+// 		console.log(token);
+// 		console.log(googleToken);
+		
+    if(token!=null){
+    	console.log(token);
+      function parseJwt (token) {
+    	  
+		    var base64Url = token.split('.')[1];
+		    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+		        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		    }).join(''));
+
+		    return JSON.parse(jsonPayload);
+		}
+		
+		let userName = parseJwt(token).userName ;
+		console.log(userName);
+		 // 假設 userName 為使用者名稱
+	    
+
+	    // 獲取導覽列元素
+	    var userNav = document.getElementById("user-nav");
+
+	    // 檢查 userName 的存在與否
+	    if (userName) {
+	    	console.log("存在");
+	        // 使用者名稱存在，替換導覽列內容為使用者名稱
+	        userNav.innerHTML = '<span class="nav-link">' + userName + '</span>';
+	    }else{
+	    	console.log("不存在");
+	    }
+
+    }else{
+    	if(googleToken!=null){
+    		console.log(googleToken)
+    		 fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + googleToken)
+             .then(function (response) {
+                 if (response.ok) {
+                     return response.json();
+                 } else {
+//                      throw new Error('請求失敗');
+                 }
+             })
+             .then(function (data) {
+                 console.log(data);
+                 // TODO: 處理解析結果的相關邏輯
+                 console.log(data.given_name); 
+                 // 獲取導覽列元素
+         	    var userNav = document.getElementById("user-nav");
+
+         	    // 檢查 userName 的存在與否
+         	    let userName = data.given_name;
+         	    if (userName) {
+         	    	console.log("存在");
+         	        // 使用者名稱存在，替換導覽列內容為使用者名稱
+         	        userNav.innerHTML = '<span class="nav-link">' + userName + '</span>';
+         	    }else{
+         	    	console.log("不存在");
+         	    }
+
+;
+             })
+             .catch(function (error) {
+//             	 console.log("no token");
+                 console.error(error);
+                 // TODO: 處理錯誤的相關邏輯
+             });
+    	}
+      
+    }
+		
+
+		
+		
+
+	}
+</script>
+
+<script>
+  $(document).ready(function() {
+      $.ajax({
+          url: "https://data.coa.gov.tw/Service/OpenData/Agriculturalnews_agriRss.aspx",
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+              fillTable(data.slice(0, 5)); // 只取前五筆資料
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+
+      function fillTable(data) {
+          var tableBody = $("table tbody");
+          tableBody.empty();
+
+          $.each(data, function(index, item) {
+              var pubDate = formatDate(item.pubDate); // 格式化日期
+              var title = item.title;
+              var link = item.link;
+              var description = item.description.substring(0, 100); // 截取前50個字元
+
+              var row = $("<tr>").addClass("bg-blue");
+              row.append($("<td>").addClass("pt-2").text(pubDate));
+              row.append($("<td>").addClass("pt-3").text(title));
+              row.append($("<td>").addClass("pt-3").append($("<a>").attr("href", link).attr("target", "_blank").text(description)));
+
+              tableBody.append(row);
+              tableBody.append($("<tr>").attr("id", "spacing-row").append($("<td>")));
+          });
+      }
+
+      function formatDate(dateString) {
+          var date = new Date(dateString);
+          var year = date.getFullYear();
+          var month = ('0' + (date.getMonth() + 1)).slice(-2);
+          var day = ('0' + date.getDate()).slice(-2);
+          return year + '/' + month + '/' + day;
+      }
+  });
+
+</script>
+
+<body style="background-color: white;">
+
+
+  <div class="banner">
+      <h2>
+        <b>讓你吃的安心</b><br />
+        <b>吃出高CP值的交流平台</b>
+      </h2>
+    </div>
+  
+    <div>
+      <h3>　新聞訊息<br /></h3>
+      </div>
+      <br>
+  <div class="containerNews">
+    <div class="titleH"></div>
+    <div class="table2">
+        <table class="table2">
+            <thead>
+                <tr>
+                    <th scope="col">日期</th>
+                    <th scope="col">主題</th>
+                    <th scope="col">內容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="bg-blue">
+                    <!-- <td class="">
+                        <div class=""></div>
+                    </td>
+                    <td class=""></td>
+                    <td class=""></td>
+                    <td class="">
+                        <span class=""></span>
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br><br>
+<!-- 主題a.c.b : 置入討論區內容呈現 -->
+  <h3>　近期熱門討論</h3>
+
+
+<!-- <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Slide 5"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/images/product_1.png" class="d-block w-100" alt="111111111111111111111111111111111" style="height: 300px; object-fit: cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/product_2.png" class="d-block w-100" alt="222222222222222222222222222222222" style="height: 300px; object-fit: cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/store.png" class="d-block w-100" alt="3333333333333333333333333333333333333" style="height: 300px; object-fit: cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/product_3.png" class="d-block w-100" alt="4444444444444444444444444444444444" style="height: 300px; object-fit: cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Fourth slide label</h5>
+        <p>Some representative placeholder content for the fourth slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/product_4.png" class="d-block w-100" alt="5555555555555555555555555555555555" style="height: 300px; object-fit: cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Fifth slide label</h5>
+        <p>Some representative placeholder content for the fifth slide.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div> -->
+
+
+
+<div id="cardCarousel" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+      <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#cardCarousel" data-slide-to="1"></li>
+      <li data-target="#cardCarousel" data-slide-to="2"></li>
+      <li data-target="#cardCarousel" data-slide-to="3"></li>
+      <li data-target="#cardCarousel" data-slide-to="4"></li>
+  </ol>
+  <div class="carousel-inner">
+      <div class="carousel-item active">
+          <div class="row">
+              <div class="col-md-4">
+                  <div class="card">Card 1</div>
+              </div>
+              <div class="col-md-4">
+                  <div class="card">Card 2</div>
+              </div>
+              <div class="col-md-4">
+                  <div class="card">Card 3</div>
+              </div>
+          </div>
+      </div>
+      <div class="carousel-item">
+          <div class="row">
+              <div class="col-md-4">
+                  <div class="card">Card 4</div>
+              </div>
+              <div class="col-md-4">
+                  <div class="card">Card 5</div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+  </a>
+</div>
+
+
+      
+<br><br>
+<div class="footer" >
+  <div class="footer-column">
+    <p><br>
+      <b>關於 食材行情小幫手</b><br>
+      <a>讓你吃的安心, 吃出高CP值的交流平台</a> <br><br>
+      <b>
+        版權所有 Copyright © 2023-2023.
+        <br>
+        隱私權保護宣告｜資訊安全政策宣導｜版權宣告
+      </b>
+    </p>
+  </div>
+  <div class="footer-column">
+    <ul><br>
+      <b>聯絡方式</b><br>
+      <li>
+        <a><i class="fa-solid fa-phone"></i>Tel : (04) 2326-5860</a><br>
+        <a href="mailto:6464service@ispan.com"><i class="fa-solid fa-envelope"></i>team6service@ispan.com</a><br>
+        <a><i class="fa-solid fa-bell-concierge"></i>服務時間：一至五 09:00 至 17:30</a><br>
+        <a><i class="fa-solid fa-location-dot"></i>地址：台中市南屯區公益路二段51號18樓</a>
+        </li>
+     
+    </ul>
+  </div>
+  <div class="footer-column">
+    <ul class="vertical-center"><br>
+      <b>食材行情小幫手</b><br>
+      <li>
+        <a class="google-icon" href="#">
+          <i class="fa-brands fa-google-plus-square"></i>
+        </a>
+        <a class="twitter-icon" href="#">
+          <i class="fa-brands fa-twitter-square"></i>
+        </a>
+        <a class="facebook-icon" href="#">
+          <i class="fa-brands fa-facebook-square"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+<!-- <div style="text-align: center; background-color: rgb(249, 218, 177); ">
+  <b>
+    版權所有 Copyright © 2023-2023 All Rights Reserved.
+    <br>
+    隱私權保護宣告｜資訊安全政策宣導｜版權宣告
+  </b>
+</div> -->
+
+
+</body>
+
+</html>

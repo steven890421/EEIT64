@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+        <html>
+
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+                crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+                crossorigin="anonymous"></script>
+            <script src="https://kit.fontawesome.com/49d9cf6d09.js" crossorigin="anonymous"></script>
+
+            <title>農產品篩選</title>
+
+            <link rel="stylesheet" type="text/css" href="/css/BPSstyle.css">
+			<link rel="stylesheet" href="/css/nav.css">
+<!-- 			<link rel="stylesheet" href="/css/footer.css"> -->
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+        </head>
+
+<script>
+ 
+
+
+
+    $(document).ready(function () {
+        // 用來存放作物代號及名稱的陣列
+        var cropData = [];
+        loadData();
+      
+        
+        // 當點選"全部產品"按鈕並按下"列出全部"後觸發的事件
+        $("button.yes-button").click(function () {
+            if ($("input[name='location']:checked").val() === "allItem" || $("input[name='location']:checked").val() === "partItem") {
+                // 使用AJAX從網址獲取MySQL資料
+            	loadData();
+            }
+        });
+
+        // 當點選"篩選"按鈕時觸發的事件
+        $("button.filter-button").click(function () {
+            // 清空已選作物選單
+            $(".selected-menu ul").empty();
+
+            // 將點選的作物加入已選作物選單
+            $(".scroll-menu ul li.selected").each(function () {
+//                 var cropCode = $(this).text().split(" - ")[0];
+
+                console.log(this);//檢查點
+                
+                var cropName = $(this).text().split(" - ")[0];
+                $(".selected-menu ul").append("<li>" + cropName + "</li>");
+                
+                console.log(cropName);//檢查點
+                
+
+            });
+        });
+        
+
+        // 當點選"刪除"按鈕時觸發的事件
+        $("button.delete-button").click(function () {
+            // 遍歷已選作物選單的項目
+            $(".selected-menu ul li.selected").each(function () {
+                $(this).remove(); // 移除被選中的項目
+            });
+        });
+
+        // 當點選作物選單的項目時觸發的事件
+        $(document).on("click", ".scroll-menu ul li", function () {
+            $(this).toggleClass("selected");
+        });
+
+        // 當點選"搜尋"按鈕時觸發的事件
+        $("button.search-button").click(function () {
+    var inputVal = $("#inputVal").val();
+    var foundItems = [];
+
+    $(".scroll-menu ul li").each(function () {
+        var cropName = $(this).text().split(" - ")[0];
+        if (cropName.indexOf(inputVal) !== -1 && foundItems.indexOf(cropName) === -1) {
+            foundItems.push(cropName);
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});
+
+
+        // 當點選"刪除所有"按鈕時觸發的事件
+        $("button.del-button").click(function () {
+            // 清空作物選單
+            $(".scroll-menu ul").empty();
+            cropData = [];
+
+            // 清空已選作物選單
+            $(".selected-menu ul").empty();
+        });
+        
+        $("button.confirm-button").click(function () {
+            var selectedItems = [];
+            // 將選中的作物存入selectedItems陣列
+            $(".selected-menu ul li").each(function () {
+              selectedItems.push($(this).text());
+            });
+
+            // 顯示結果在console.log
+            console.log(selectedItems);
+            
+            localStorage.clear();
+            localStorage.setItem('ScropName_Agricultural_Products', JSON.stringify(selectedItems));
+            window.location.href = "Agricultural_Products.html";
+          });
+    });
+  
+  
+  
+  function loadData() {
+      $.ajax({
+          url: "/selects", // 修改為伺服器端處理資料的路徑
+          method: "GET",
+          dataType: "json",
+          success: function (response) {
+              // 清空作物選單
+              $(".scroll-menu ul").empty();
+              cropData = [];
+              console.log(response);
+
+          // 迭代JSON資料，獲取作物代號及名稱，並將它們存入陣列和加入作物選單
+          for (var i = 0; i < response.length; i++) {
+              var crop = response[i];
+//               var cropCode = crop["CropCode"];
+              var cropName = crop["cropName"];
+
+              if (cropName !== null && cropName !== "") {
+                  cropData.push({
+                      
+                      name: cropName
+                  });
+
+                  if ($("input[name='location']:checked").val() === "partItem") {
+                      var cropNameShort = cropName.split("-")[0].trim();
+                      $(".scroll-menu ul").append("<li>" + cropNameShort + "</li>");
+                  } else {
+                      $(".scroll-menu ul").append("<li>" + cropName + "</li>");
+                  }
+              }
+          }
+
+          // 清空已選作物選單
+          $(".selected-menu ul").empty();
+      },
+      error: function (xhr, status, error) {
+          console.error(error);
+      }
+      });}
+    
+    
+    
+    
+</script>
+
+
+
+
+
+
+
+        <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index0706final.html">
+                <img src="/images/logo.jpg" alt="Logo" width="60" height="60" " />
+          <span class=" navbar-text">食材行情小幫手</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                <li class="nav-item me-4">
+                        <a class="nav-link" href="index0706final.html">首頁</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="select.html">農產行情</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="#">漁產行情</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="#">討論區</a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="ml-auto">
+                <a class="nav-link" href="#"> 登入|註冊 </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bar">
+        <span class="bar-text">選擇作物</span>
+    </div>
+
+        
+        
+            <div class="container-fluid bgCol-div">
+                <div class="row justify-content-center align-items-center">
+<!--                     <h1 class="text-center">選擇作物</h1> -->
+<!--                     <div class="col-auto text-center"> -->
+<!--                         <p>依作物類別</p> -->
+<!--                         <p>依作物類別</p> -->
+<!--                     </div> -->
+                    <div class="col-auto text-center">
+                        <form>
+                            <p>選擇作物項目</p>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="location" value="allItem"
+                                    id="allItemRadio"> <label class="form-check-label" for="allItemRadio">全部產品</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="location" value="partItem"
+                                    id="partItemRadio"> <label class="form-check-label" for="partItemRadio">大項產品</label>
+                            </div>
+<!--                             <div class="form-check form-check-inline"> -->
+<!--                                 <input class="form-check-input" type="radio" name="location" value="littleItem" -->
+<!--                                     id="littleItemRadio"> <label class="form-check-label" -->
+<!--                                     for="littleItemRadio">細項產品</label> -->
+<!--                             </div> -->
+                        </form>
+                    </div>
+                    <div class="col-auto text-center">
+                        <div class="row">
+                            <div class="col-sm-auto text-center">
+                                <p>關鍵字查詢</p>
+                                <input type="text" class="form-control text-center" id="inputVal" placeholder="產品名稱、代碼">
+                            </div>
+                            <div class="col-sm-auto text-center mt-3">
+                                <br>
+                                <button type="button" class="btn search-button">
+                                    <i class="fa-solid fa-magnifying-glass" style="color: white"></i>搜尋
+                                </button>
+                            </div>
+                            <div class="col-sm-auto text-center mt-3">
+                                <br>
+                                <button type="button" class="btn yes-button" id="listAllButton">列出全部</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <h2>選擇作物</h2>
+                        <div class="scroll-menu">
+                            <ul>
+
+                                <!-- 作物選單 -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <h2>已選作物</h2>
+                        <div class="selected-menu scroll-menu">
+                            <ul>
+                                <!-- 已選作物選單 -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="text-center">
+                <button type="button" class="btn delete-button">◀</button>
+                <button type="button" class="btn filter-button">▶</button>
+            </div>
+
+            <br>
+            <div class="text-center">
+                <button type="button" class="btn confirm-button">確定</button>
+                <button type="button" class="btn del-button">清除選項</button>
+            </div>
+            
+            
+            <br>
+             <div class="footer" >
+  <div class="footer-column">
+    <p><br>
+      <b>關於 食材行情小幫手</b><br>
+      <a>讓你吃的安心, 吃出高CP值的交流平台</a> <br><br>
+      <b>
+        版權所有 Copyright © 2023-2023.
+        <br>
+        隱私權保護宣告｜資訊安全政策宣導｜版權宣告
+      </b>
+    </p>
+  </div>
+  <div class="footer-column">
+    <ul><br>
+      <b>聯絡方式</b><br>
+      <li>
+        <a><i class="fa-solid fa-phone"></i>Tel : (04) 2326-5860</a><br>
+        <a href="mailto:6464service@ispan.com"><i class="fa-solid fa-envelope"></i>team6service@ispan.com</a><br>
+        <a><i class="fa-solid fa-bell-concierge"></i>服務時間：一至五 09:00 至 17:30</a><br>
+        <a><i class="fa-solid fa-location-dot"></i>地址：台中市南屯區公益路二段51號18樓</a>
+        </li>
+     
+    </ul>
+  </div>
+  <div class="footer-column">
+    <ul class="vertical-center"><br>
+      <b>食材行情小幫手</b><br>
+      <li>
+        <a class="google-icon" href="#">
+          <i class="fa-brands fa-google-plus-square"></i>
+        </a>
+        <a class="twitter-icon" href="#">
+          <i class="fa-brands fa-twitter-square"></i>
+        </a>
+        <a class="facebook-icon" href="#">
+          <i class="fa-brands fa-facebook-square"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+            
+            
+        </body>
+
+        </html>

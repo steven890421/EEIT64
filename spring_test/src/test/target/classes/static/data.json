@@ -1,0 +1,16 @@
+[
+    {
+      "ProductID": 1,
+      "ProductName": "Chai",
+      "UnitPrice": 18,
+      "UnitsInStock": 39,
+      "Discontinued": false
+    },
+    {
+      "ProductID": 2,
+      "ProductName": "Chang",
+      "UnitPrice": 19,
+      "UnitsInStock": 17,
+      "Discontinued": false
+    }
+  ]

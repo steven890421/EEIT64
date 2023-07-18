@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-light .navbar-text {
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    font-size: 24px;
+    color: #127e69 !important;
+    font-weight: bold;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #127e69;
+    text-decoration: underline;
+}
+
+.ml-auto .nav-link {
+    background: linear-gradient(to right, #68eb96, #5fe65f);
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 30px;
+    width: 110px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+}
+
+.fa-solid {
+    color: #00d42e;
+    margin-right: 20px;
+    font-size: 24px;
+
+}
+
+.ml-auto {
+    margin-right: 30px;
+}
+
+
+
+.bar {
+    background: linear-gradient(to right, #28d64b, #01c22b);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+
+}
+
+.bar-text {
+    font-size: 64px;
+    color: #fff;
+}
+/* footer css */
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: antiquewhite;
+    font-family: '微軟正黑體', sans-serif;
+}
+
+.footer-column {
+    flex-basis: calc(33.33% - 20px);
+    margin-bottom: 20px;
+    font-family: '微軟正黑體', sans-serif;
+    padding: 10px;
+    
+}
+
+.vertical-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+.footer ul {
+    list-style-type: none;
+}
+
+.google-icon {
+    color: #db4437;
+    font-size: 50px; /* 調整所需的大小值 */
+}
+
+.twitter-icon {
+    color: #41abe1;
+    font-size: 50px; /* 調整所需的大小值 */
+}
+
+.facebook-icon {
+    color: #3a5795;
+    font-size: 50px; /* 調整所需的大小值 */
+}
+
+.banner {
+    background-image: url(../images/header_desktop.png);
+    background-size: cover;
+    background-position: 50%;
+    height: 530px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    text-align: center;
+    color: white;
+}

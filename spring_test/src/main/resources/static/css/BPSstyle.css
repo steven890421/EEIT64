@@ -1,0 +1,87 @@
+/* BPSstyle.css */
+body {
+	font-family: "Microsoft JhengHei", Arial, sans-serif;
+	 background-color: lightgray;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.bgCol-div {
+	background-color: #00821A;
+	width: 100%;
+	height: 150px;
+	color: #FFFFFF;
+	padding: 5px;
+}
+
+/* 自訂按鈕樣式 */
+.radItem-background {
+	background-color: #f0efef;
+}
+
+.yes-button {
+	background-color: #00D42E;
+	border-color: #00D42E;
+}
+.search-button{
+	background-color: #00D42E;
+	border-color: #00D42E;
+}
+.yes-button:hover {
+	background-color: #00821A;
+	border-color: #00821A;
+}
+.search-button:hover {
+	background-color: #00821A;
+	border-color: #00821A;
+}
+
+.del-button {
+	background-color: #a1a3a1;
+	border-color: #a1a3a1;
+}
+.confirm-button {
+	background-color: #a1a3a1;
+	border-color: #a1a3a1;
+}
+
+.del-button:hover {
+	background-color: #757675;
+	border-color: #757675;
+}
+.confirm-button:hover {
+	background-color: #757675;
+	border-color: #757675;
+}
+.scroll-menu ul {
+    list-style-type: none;
+    max-height: 200px;
+	width: 400px;
+	overflow-y: auto;
+	background-color: #c9ffc9;
+	border: 1px solid #5e5c5c;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.scroll-menu ul li {
+    list-style: none;
+    
+}
+
+.scroll-menu ul li.selected {
+    background-color: #00ccff;
+    color: white;
+    
+	
+}
+
+.menu-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+
+

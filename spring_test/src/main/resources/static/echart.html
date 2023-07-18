@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖表分析</title>
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+	<link rel="stylesheet" href="/css/nav.css">
+	<link rel="stylesheet" href="/css/echart.css">	
+  
+  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="/images/logo.jpg" alt="Logo" width="60" height="60" />
+          <span class=" navbar-text">食材行情小幫手</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                <li class="nav-item me-4">
+                        <a class="nav-link" href="index.html">首頁</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="select.html">農產行情</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="#">漁產行情</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="#">討論區</a>
+                    </li>
+                    <li class="nav-item me-4">
+                        <a class="nav-link" href="#">商城</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="ml-auto">
+                <a class="nav-link" href="#"> 登入|註冊 </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bar">
+        <span class="bar-text" id="name1">近期圖表分析</span>
+        <span class="bar-text" id="name2"></span>
+    </div>
+
+
+
+    <div class="divPar">
+    <div id=pie style="width: 1000px; height: 800px;"></div>
+    <div id=bar style="width: 1000px; height: 800px;"></div>
+   
+    <div id=Line_Bar style="width: 1000px; height: 600px;"></div>
+     </div>
+    
+    <footer>
+ <br><br>
+<div class="footer" >
+  <div class="footer-column">
+    <p><br>
+      <b>關於 食材行情小幫手</b><br>
+      <a>讓你吃的安心, 吃出高CP值的交流平台</a> <br><br>
+      <b>
+        版權所有 Copyright © 2023-2023.
+        <br>
+        隱私權保護宣告｜資訊安全政策宣導｜版權宣告
+      </b>
+    </p>
+  </div>
+  <div class="footer-column">
+    <ul><br>
+      <b>聯絡方式</b><br>
+      <li>
+        <a><i class="fa-solid fa-phone"></i>Tel : (04) 2326-5860</a><br>
+        <a href="mailto:6464service@ispan.com"><i class="fa-solid fa-envelope"></i>team6service@ispan.com</a><br>
+        <a><i class="fa-solid fa-bell-concierge"></i>服務時間：一至五 09:00 至 17:30</a><br>
+        <a><i class="fa-solid fa-location-dot"></i>地址：台中市南屯區公益路二段51號18樓</a>
+        </li>
+     
+    </ul>
+  </div>
+  <div class="footer-column">
+    <ul class="vertical-center"><br>
+      <b>食材行情小幫手</b><br>
+      <li>
+        <a class="google-icon" href="#">
+          <i class="fa-brands fa-google-plus-square"></i>
+        </a>
+        <a class="twitter-icon" href="#">
+          <i class="fa-brands fa-twitter-square"></i>
+        </a>
+        <a class="facebook-icon" href="#">
+          <i class="fa-brands fa-facebook-square"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+    <script>
+         //https://blog.csdn.net/s_x123456/article/details/90476718 參考
+
+        // let CropName = "椰子-進口"
+        let CropName = localStorage.getItem('ScropName_echart');
+        //Line_Bar圖
+//         let n1 = document.getElementById('name1').innerHTML;
+        document.getElementById('name2').innerHTML = ":"+CropName;
+//         setInterval(toggleFade, 1000);
+        const option = {
+            title: {
+
+                subbtext: "示範",
+                left: "left"
+            },
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: { show: true, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            legend: {
+                data: ['成交量', '成交價']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: [],
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '成交量(每公頓)',
+
+                    boundaryGap: ["0", "0.5"],
+                    interval: 1,
+                    axisLabel: {
+                        formatter: '{value} 公噸'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '成交價(每公斤)',
+                    boundaryGap: ["0", "0.5"],
+                    interval: 50,
+                    axisLabel: {
+                        formatter: '{value} 元'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '成交量',
+                    type: 'bar',
+                    tooltip: {
+                        valueFormatter: function (value) {
+                            return value + ' 公噸';
+                        }
+                    },
+                    data: []
+                },
+                {
+                    name: '成交價',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    tooltip: {
+                        valueFormatter: function (value) {
+                            return value + ' 元';
+                        }
+                    },
+                    data: [] //折線圖
+                }
+            ]
+        };
+        //餅圖
+        const pie = {
+            title: {
+                subbtext: "",
+                left: "left"
+            },
+            legend: {
+                top: 'top'
+            }, tooltip: {
+                trigger: "item"
+            }
+            ,
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            series: [
+                {
+                    name: '',
+                    type: 'pie',
+                    radius: [50, 250],
+                    center: ['50%', '50%'],
+                    roseType: 'area',
+                    itemStyle: {
+                        borderRadius: 8
+                    },
+                    data: [
+                    ]
+                }
+            ]
+        };
+
+
+        //柱狀圖
+        const bar = {
+            title: {
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {},
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                boundaryGap: ["0", "0.3"]
+            },
+            yAxis: {
+                type: 'category',
+                data: [],
+                inverse: true
+            },
+            series: [
+                {
+                    name: '平均價',
+                    type: 'bar',
+                    data: [],
+                    sort: 'descending'
+
+                }
+            ]
+        };
+
+
+
+
+
+
+        //Line_Bar圖Data
+        var Line_BarDom = document.getElementById('Line_Bar');
+        var Line_BarChart = echarts.init(Line_BarDom);
+        let TransDate = [];
+        let Avg_Price = [];
+        let data = [];
+        let nowDate = "", startDate = "";
+
+        //餅圖Data
+        var chartDom = document.getElementById('pie');
+        var myChart = echarts.init(chartDom);
+
+
+        //柱狀圖Data
+        var barDom = document.getElementById('bar');
+        var barChart = echarts.init(barDom);
+
+
+        //預設七天前
+        let currentDate = new Date();
+        let old7Date = currentDate.setDate(currentDate.getDate() - 30);
+        old7Date = new Date(old7Date);
+        let year = old7Date.getFullYear() - 1911;
+        let month = old7Date.getMonth() + 1;
+        let day = old7Date.getDate();
+        startDate = `${year}.${month < 10 ? '0' + month : month}.${day < 10 ? '0' + day : day}`;
+        console.log(startDate);
+
+        //現在時間
+        let nowtime = new Date();
+        let nowyear = nowtime.getFullYear() - 1911;
+        let nowmonth = nowtime.getMonth() + 1;
+        let nowday = nowtime.getDate();
+        nowDate = `${nowyear}.${nowmonth < 10 ? '0' + nowmonth : nowmonth}.${nowday < 10 ? '0' + nowday : nowday}`;
+        console.log(nowDate);
+
+
+
+
+
+        let End_time = nowDate;
+        let start_time = startDate;
+
+        URL = `https://data.coa.gov.tw/api/v1/AgriProductsTransType/?Start_time=${start_time}&End_time=${End_time}&CropName=${CropName}`
+        fetch(URL)
+            .then(Response => Response.json())
+            .then(res => {
+                if (res.RS = "OK") {
+                    data = res.Data;
+                    // console.log(data)
+                    console.log("連線成功")
+
+
+
+                    Line_BarChart.setOption({
+                        title: {
+                            text: "交易行情趨勢圖"
+//                             text: "交易行情趨勢圖(" + CropName + ")"
+                        }
+                    });
+
+
+                    const result = data.reduce((total, { TransDate, Trans_Quantity }) => {
+                        const date = TransDate.split('.').join('/');
+                        total[date] = total[date] || { sum: 0, count: 0 };
+                        total[date].sum += Trans_Quantity;
+                        total[date].count++;
+                        return total;
+                    }, {});
+
+                    const average = Object.entries(result).reduce((total, [date, { sum, count }]) => {
+                        total[date] = sum / count;
+                        return total;
+                    }, {});
+
+
+                    const sortedAverage = Object.entries(average).sort(([a], [b]) => new Date(a) - new Date(b));
+                    // console.log(sortedAverage.map(([_, value]) => value));
+                    var x = sortedAverage.map(([_, value]) => value)
+                    for (let index = 0; index < x.length; index++) {
+                        // console.log(x[index])
+                        var y = x[index] / 1000
+                        Trans_Quantity = Math.round(y * 10) / 10;
+                        option.series[0].data.push(Trans_Quantity);
+                    }
+                    Line_BarChart.setOption(option);
+
+
+
+
+                    //成交價
+                    const dailyAvgPrices = data.reduce((acc, cur) => {
+                        const date = cur.TransDate;
+                        const avgPrice = cur.Avg_Price;
+                        if (!acc[date]) {
+                            acc[date] = { total: 0, count: 0 };
+                        }
+                        acc[date].total += avgPrice;
+                        acc[date].count++;
+                        return acc;
+                    }, {});
+
+                    for (const date in dailyAvgPrices) {
+                        const avgPrice = dailyAvgPrices[date].total / dailyAvgPrices[date].count;
+
+                        // console.log(`${date}: ${avgPrice}`);
+                        Avg_Price.push(avgPrice);
+
+                    }
+                    Avg_Price.reverse();
+                    // console.log(Avg_Price)
+                    Avg_Price.forEach(element => {
+                        price = Math.round(element * 10) / 10;
+                        option.series[1].data.push(price)
+
+                    });
+                    Line_BarChart.setOption(option);
+
+
+
+                    //time
+                    for (let i = 0; i < res.Data.length; i++) {
+                        TransDate.push(res.Data[i].TransDate)
+
+                    }
+                    var times = Array.from(new Set(TransDate));
+                    times.sort();
+                    times.forEach(time => {
+                        option.xAxis[0].data.push(time)
+
+                        Line_BarChart.setOption(option);
+                    });
+
+
+                    console.log(data)
+                    const transQuantities = data.map(item => item.Trans_Quantity);
+
+                    // console.log(transQuantities);
+
+
+
+                } else {
+                    console.log("連線錯誤")
+                }
+
+            })
+
+
+        URL_pie = `https://data.coa.gov.tw/api/v1/AgriProductsTransType/?Start_time=112.07.05&End_time=112.07.05&CropName=蘋果-富士`
+        fetch(URL_pie)
+            .then(Response => Response.json())
+            .then(res => {
+                if (res.RS = "OK") {
+
+                    //餅圖
+                    myChart.setOption({
+                        title: {
+                            text: "當天交易量"
+//                             text: "當天交易量(" + CropName + ")"
+                        }
+                    });
+                    data = res.Data;
+                    // console.log(data)
+                    for (let i = 0; i < data.length; i++) {
+                        marketname = data[i].MarketName;
+                        trans_Q = data[i].Trans_Quantity;
+                        console.log(trans_Q);
+                        pie.series[0].data.push({ name: marketname, value: trans_Q })
+                    }
+                    myChart.setOption(pie);
+
+
+
+                    //柱狀圖
+
+                    barChart.setOption({
+                        title: {
+                            text: "當天平均價格"
+//                             text: "當天平均價格(" + CropName + ")"
+                        }
+                    });
+
+                    data.sort(function (a, b) {
+                        return b.Avg_Price - a.Avg_Price;
+                    });
+
+                    var bar_result = data.map(function (item) {
+                        return {
+                            MarketName: item.MarketName,
+                            Avg_Price: item.Avg_Price
+                        };
+                    });
+                    console.log(bar_result)
+                    for (let i = 0; i < bar_result.length; i++) {
+                        avgPrice = bar_result[i].Avg_Price;
+                        marketName = bar_result[i].MarketName;
+                        console.log(avgPrice)
+                        bar.yAxis.data.push(marketName);
+                        bar.series[0].data.push(avgPrice);
+                    }
+                    barChart.setOption(bar);
+
+                }
+
+            })
+function toggleFade() {
+  var spanElement = $("#name2");
+  spanElement.fadeOut(1000, function() {
+    spanElement.fadeIn(1000);
+  });
+}
+    </script>
+
+</body>
+
+</html>
