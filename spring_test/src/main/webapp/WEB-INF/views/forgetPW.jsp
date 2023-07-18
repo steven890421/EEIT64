@@ -35,6 +35,9 @@
           <li class="nav-item me-4">
             <a class="nav-link" href="select">農產行情</a>
           </li>
+           <li class="nav-item me-4">
+            <a class="nav-link" href="select">漁產行情</a>
+          </li>
          
           <li class="nav-item me-4">
             <a class="nav-link" href="forum">討論區</a>

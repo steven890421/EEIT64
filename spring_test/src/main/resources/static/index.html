@@ -25,7 +25,7 @@
   
 <header> <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
             <img src="/images/logo.jpg" alt="Logo" width="60" height="60"/>
       <span class=" navbar-text">食材行情小幫手</span>
         </a>
@@ -39,9 +39,9 @@
                 <li class="nav-item me-4">
                     <a class="nav-link" href="select.html">農產行情</a>
                 </li>
-<!--                 <li class="nav-item me-4"> -->
-<!--                     <a class="nav-link" href="#">漁產行情</a> -->
-<!--                 </li> -->
+                <li class="nav-item me-4">
+                    <a class="nav-link" href="#">漁產行情</a>
+		       </li>
                 <li class="nav-item me-4">
                     <a class="nav-link" href="fourm">討論區</a>
                 </li>
@@ -147,50 +147,7 @@
 	}
 </script>
 
-<script>
-  $(document).ready(function() {
-      $.ajax({
-          url: "https://data.coa.gov.tw/Service/OpenData/Agriculturalnews_agriRss.aspx",
-          type: "GET",
-          dataType: "json",
-          success: function(data) {
-              fillTable(data.slice(0, 5)); // 只取前五筆資料
-          },
-          error: function(error) {
-              console.log(error);
-          }
-      });
 
-      function fillTable(data) {
-          var tableBody = $("table tbody");
-          tableBody.empty();
-
-          $.each(data, function(index, item) {
-              var pubDate = formatDate(item.pubDate); // 格式化日期
-              var title = item.title;
-              var link = item.link;
-              var description = item.description.substring(0, 100); // 截取前50個字元
-
-              var row = $("<tr>").addClass("bg-blue");
-              row.append($("<td>").addClass("pt-2").text(pubDate));
-              row.append($("<td>").addClass("pt-3").text(title));
-              row.append($("<td>").addClass("pt-3").append($("<a>").attr("href", link).attr("target", "_blank").text(description)));
-
-              tableBody.append(row);
-              tableBody.append($("<tr>").attr("id", "spacing-row").append($("<td>")));
-          });
-      }
-
-      function formatDate(dateString) {
-          var date = new Date(dateString);
-          var year = date.getFullYear();
-          var month = ('0' + (date.getMonth() + 1)).slice(-2);
-          var day = ('0' + date.getDate()).slice(-2);
-          return year + '/' + month + '/' + day;
-      }
-  });
-
-</script>
 
 <body style="background-color: white;">
 
@@ -295,47 +252,89 @@
 
 
 <div id="cardCarousel" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-      <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#cardCarousel" data-slide-to="1"></li>
-      <li data-target="#cardCarousel" data-slide-to="2"></li>
-      <li data-target="#cardCarousel" data-slide-to="3"></li>
-      <li data-target="#cardCarousel" data-slide-to="4"></li>
-  </ol>
-  <div class="carousel-inner">
-      <div class="carousel-item active">
-          <div class="row">
-              <div class="col-md-4">
-                  <div class="card">Card 1</div>
-              </div>
-              <div class="col-md-4">
-                  <div class="card">Card 2</div>
-              </div>
-              <div class="col-md-4">
-                  <div class="card">Card 3</div>
-              </div>
-          </div>
-      </div>
-      <div class="carousel-item">
-          <div class="row">
-              <div class="col-md-4">
-                  <div class="card">Card 4</div>
-              </div>
-              <div class="col-md-4">
-                  <div class="card">Card 5</div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-  </a>
-</div>
+        <ol class="carousel-indicators">
+            <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#cardCarousel" data-slide-to="1"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/Cabbage.jpg" class="card-img-top" alt="Card 1 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">高麗菜物價</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/fish.jpg" class="card-img-top" alt="Card 2 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">現在有什麼魚能做生魚片?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/wine.png" class="card-img-top" alt="Card 3 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">有什麼水果適合泡酒?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/foodone.png" class="card-img-top" alt="Card 4 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">創意料理-1</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/foodtwo.png" class="card-img-top" alt="Card 5 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">夏天來點沙拉</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="https://example.com">
+                                <img src="/images/foodthree.png" class="card-img-top" alt="Card 6 Image">
+                            </a>
+                            <div class="card-body text-center">
+                                <p class="card-text">用當季水果做披薩</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
 
 
       
@@ -382,15 +381,53 @@
   </div>
   
 
-<!-- <div style="text-align: center; background-color: rgb(249, 218, 177); ">
-  <b>
-    版權所有 Copyright © 2023-2023 All Rights Reserved.
-    <br>
-    隱私權保護宣告｜資訊安全政策宣導｜版權宣告
-  </b>
-</div> -->
+
 
 
 </body>
+<script>
+  $(document).ready(function() {
+      $.ajax({
+          url: "https://data.coa.gov.tw/Service/OpenData/Agriculturalnews_agriRss.aspx",
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+              fillTable(data.slice(0, 5)); // 只取前五筆資料
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+
+      function fillTable(data) {
+          var tableBody = $("table tbody");
+          tableBody.empty();
+
+          $.each(data, function(index, item) {
+              var pubDate = formatDate(item.pubDate); // 格式化日期
+              var title = item.title;
+              var link = item.link;
+              var description = item.description.substring(0, 100); // 截取前50個字元
+
+              var row = $("<tr>").addClass("bg-blue");
+              row.append($("<td>").addClass("pt-2").text(pubDate));
+              row.append($("<td>").addClass("pt-3").text(title));
+              row.append($("<td>").addClass("pt-3").append($("<a>").attr("href", link).attr("target", "_blank").text(description)));
+
+              tableBody.append(row);
+              tableBody.append($("<tr>").attr("id", "spacing-row").append($("<td>")));
+          });
+      }
+
+      function formatDate(dateString) {
+          var date = new Date(dateString);
+          var year = date.getFullYear();
+          var month = ('0' + (date.getMonth() + 1)).slice(-2);
+          var day = ('0' + date.getDate()).slice(-2);
+          return year + '/' + month + '/' + day;
+      }
+  });
+
+</script>
 
 </html>

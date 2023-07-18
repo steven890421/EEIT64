@@ -40,7 +40,35 @@ public class ShowController {
 		return "index";
 	}
 
-	
+	@PostMapping("/register")
+	public String register(@RequestParam("name") String name, @RequestParam("email") String email,
+			@RequestParam("password") String password,
+			@RequestParam("photo")  MultipartFile photo   ,  Model model) {
+			
+			
+		
+				if(photo != null) {
+					
+					byte[] photoData;
+					try {
+						photoData = photo.getBytes();
+						Member member = new Member(0, email, password, name, photoData);
+						memberDao.saveMember(member);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else {
+					
+					
+					Member member = new Member(0, email, password, name, null);
+					memberDao.saveMember(member);
+					
+				}
+			
+
+		return "redirect:login";
+	}
 
 	@GetMapping("/register")
 	public String register(Model model) {

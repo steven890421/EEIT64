@@ -64,7 +64,7 @@ h1 {
 }
 a:link,
 a:visited {
-	color: blue; /* 設定預設的超連結顏色 */
+	
 	text-decoration: none; /* 移除預設的下劃線 */
 }
 
