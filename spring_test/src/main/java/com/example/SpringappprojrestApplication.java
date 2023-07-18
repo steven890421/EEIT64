@@ -9,10 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @MapperScan({"com/example/mapper", "com.example.model"})
-public class SpringTestApplication {
+public class SpringappprojrestApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringTestApplication.class, args);
+		SpringApplication.run(SpringappprojrestApplication.class, args);
 	}
  
 }
